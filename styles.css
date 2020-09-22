@@ -1,19 +1,74 @@
+header {
+  border-color: lightgray;
+  border-top: 0;
+  border-style: solid;
+  margin-bottom: 1rem;
+  margin-top: 10px;
+}
+
 #logo {
   font-family: "Satisfy", cursive;
-  margin-left: 30px;
+  margin-left: 20px;
+  border-bottom: 0;
 }
 
 #shopping-cart {
   width: 40px;
   height: auto;
+  padding: 0;
+}
+
+#shoppingCartItemsCount {
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-right: 20px;
 }
 
 .main-image > img {
-  max-width: 100%;
+  width: 100%;
+}
+
+.navbar {
+  height: 5rem;
+}
+
+.title {
+  border-style: solid;
+  border-left: 0;
+  border-right: 0;
+  border-color: lightgray;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
 }
 
 .card {
-  min-width: 18rem;
-  max-width: 20rem;
+  min-width: 16rem;
+  max-width: 16rem;
   margin: 5px;
+}
+
+.card-img-top {
+  height: 15rem;
+}
+
+.card-text {
+  height: 17rem;
+}
+
+.buttons {
+  margin-right: 5px;
+}
+
+.buttons > div {
+  padding: 0;
+}
+
+.btn {
+  margin: 2px;
+}
+
+footer {
+  margin-top: 1rem;
+  font-weight: bold;
 }

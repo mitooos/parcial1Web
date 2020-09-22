@@ -18,18 +18,21 @@
   </head>
   <body>
     <header class="row">
-      <h1 id="logo">Restaurant & Lounge</h1>
+      <h1 id="logo" class="col">Restaurant & Lounge</h1>
       <img
         src="https://i.imgur.com/1EKrQIi.png"
         alt="shopping cart"
         id="shopping-cart"
+        class="col-auto"
       />
-      <p id="shoppingCartItems">Items: 0</p>
+      <div class="col-auto align-self-center">
+        <p id="shoppingCartItemsCount">Items: 0</p>
+      </div>
     </header>
     <div class="main-image">
       <img src="https://i.imgur.com/S8Ffdqa.png" alt="hamburger image" />
     </div>
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
       <button
         class="navbar-toggler"
         type="button"
@@ -62,6 +65,51 @@
       </div>
     </nav>
     <div id="items"></div>
+    <div
+      class="modal fade"
+      id="cancelModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="cancelModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="cancelModalLabel">Cancel the order</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>Are you sure about cancelling the order?</p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              id="cancelOrderButton"
+              data-dismiss="modal"
+            >
+              Yes, I want to cancel the order
+            </button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal">
+              No, I want to continue adding products
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer>
+      <p class="text-center">
+        Contact us: +57 3102030203 - info@retaurant.com - @restaurant
+      </p>
+    </footer>
     <script src="./index.js"></script>
     <script
       src="https://code.jquery.com/jquery-3.5.1.slim.min.js"

@@ -11,64 +11,44 @@ const fetchData = async (dataUrl) => {
   }
 };
 
-let shoppingCart = [];
+let shoppingCart = new Map();
 
 let dataDiv = document.getElementById("items");
 
 const main = async () => {
   data = await fetchData(url);
-  let title = document.createElement("h2");
-  title.innerHTML = "Burgers";
-  title.classList.add("text-center");
-  dataDiv.innerHTML = "";
-  dataDiv.appendChild(title);
-  dataDiv.appendChild(renderItems(data[0].products));
+  renderMenu("Burgers", data[0].products);
 };
 
 document.getElementById("burgers").addEventListener("click", () => {
-  let title = document.createElement("h2");
-  title.innerHTML = "Burgers";
-  title.classList.add("text-center");
-  dataDiv.innerHTML = "";
-  dataDiv.appendChild(title);
-  dataDiv.appendChild(renderItems(data[0].products));
+  renderMenu("Burgers", data[0].products);
 });
 
 document.getElementById("tacos").addEventListener("click", () => {
-  let title = document.createElement("h2");
-  title.innerHTML = "Tacos";
-  title.classList.add("text-center");
-  dataDiv.innerHTML = "";
-  dataDiv.appendChild(title);
-  dataDiv.appendChild(renderItems(data[1].products));
+  renderMenu("Tacos", data[1].products);
 });
 
 document.getElementById("salads").addEventListener("click", () => {
-  let title = document.createElement("h2");
-  title.innerHTML = "Salads";
-  title.classList.add("text-center");
-  dataDiv.innerHTML = "";
-  dataDiv.appendChild(title);
-  dataDiv.appendChild(renderItems(data[2].products));
+  renderMenu("Salads", data[2].products);
 });
 
 document.getElementById("desserts").addEventListener("click", () => {
-  let title = document.createElement("h2");
-  title.innerHTML = "Desserts";
-  title.classList.add("text-center");
-  dataDiv.innerHTML = "";
-  dataDiv.appendChild(title);
-  dataDiv.appendChild(renderItems(data[3].products));
+  renderMenu("Desserts", data[3].products);
 });
 
 document.getElementById("drinks").addEventListener("click", () => {
+  renderMenu("Drinks & Slides", data[4].products);
+});
+
+const renderMenu = (titleText, items) => {
   let title = document.createElement("h2");
-  title.innerHTML = "Drinks & Slides";
+  title.innerHTML = titleText;
   title.classList.add("text-center");
+  title.classList.add("title");
   dataDiv.innerHTML = "";
   dataDiv.appendChild(title);
-  dataDiv.appendChild(renderItems(data[4].products));
-});
+  dataDiv.appendChild(renderItems(items));
+};
 
 const renderItems = (itemsArray) => {
   let cardDeck = document.createElement("div");
@@ -95,12 +75,15 @@ const renderItems = (itemsArray) => {
     cardDescription.innerHTML = item.description;
     cardBody.appendChild(cardDescription);
 
+    let price = document.createElement("h6");
+    price.innerHTML = "$" + item.price;
+    cardBody.appendChild(price);
+
     let cartButton = document.createElement("button");
     cartButton.classList.add("btn");
     cartButton.classList.add("btn-secondary");
     cartButton.addEventListener("click", () => {
-      shoppingCart.push(item);
-      console.log(shoppingCart);
+      addItemToCart(item);
     });
     cartButton.innerText = "Add to cart";
     cardBody.appendChild(cartButton);
@@ -109,22 +92,65 @@ const renderItems = (itemsArray) => {
 
     cardDeck.appendChild(card);
   });
-
-  console.log(cardDeck);
   return cardDeck;
 };
 
+const addItemToCart = (item) => {
+  if (shoppingCart.has(item.name)) {
+    item = shoppingCart.get(item.name);
+    item.count += 1;
+  } else {
+    item.count = 1;
+  }
+  shoppingCart.set(item.name, item);
+  document.getElementById("shoppingCartItemsCount").innerHTML =
+    " Items: " + shoppingCart.size;
+};
+
 document.getElementById("shopping-cart").addEventListener("click", () => {
+  renderCart();
+});
+
+const renderCart = () => {
   let title = document.createElement("h2");
   title.innerHTML = "Order detail";
   title.classList.add("text-center");
+  title.classList.add("title");
   dataDiv.innerHTML = "";
   dataDiv.appendChild(title);
 
-  dataDiv.appendChild(renderDetail());
-});
+  dataDiv.appendChild(renderCartDetail());
 
-const renderDetail = () => {
+  let total = document.createElement("h6");
+  total.innerHTML = "Total: $" + getCartTotal();
+  dataDiv.appendChild(total);
+
+  let buttons = document.createElement("div");
+  buttons.classList.add("row");
+  buttons.classList.add("buttons");
+  buttons.classList.add("justify-content-end");
+
+  let cancelButton = document.createElement("div");
+  cancelButton.classList.add("col-auto");
+  cancelButton.innerHTML = `<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#cancelModal">
+  Cancel
+</button>`;
+  buttons.appendChild(cancelButton);
+
+  let confirmButton = document.createElement("button");
+  confirmButton.classList.add("col-auto");
+  confirmButton.classList.add("btn");
+  confirmButton.classList.add("btn-outline-secondary");
+  confirmButton.innerHTML = "Confirm order";
+  confirmButton.addEventListener("click", () => {
+    console.log(Array.from(shoppingCart.values()));
+  });
+  buttons.appendChild(confirmButton);
+
+  dataDiv.appendChild(buttons);
+};
+
+const renderCartDetail = () => {
   let table = document.createElement("table");
   table.classList.add("table");
   table.classList.add("table-striped");
@@ -143,11 +169,11 @@ const renderDetail = () => {
 
   shoppingCart.forEach((item, index) => {
     let row = document.createElement("tr");
-    row.insertCell(0).innerHTML = index;
-    row.insertCell(1).innerHTML = 1;
-    row.insertCell(2).innerHTML = item.description;
-    row.insertCell(3).innerHTML = item.description;
-    row.insertCell(4).innerHTML = 1;
+    row.insertCell(0).innerHTML = index + 1;
+    row.insertCell(1).innerHTML = item.count;
+    row.insertCell(2).innerHTML = item.name;
+    row.insertCell(3).innerHTML = item.price;
+    row.insertCell(4).innerHTML = item.count * item.price;
 
     tableBody.appendChild(row);
   });
@@ -157,5 +183,19 @@ const renderDetail = () => {
 
   return table;
 };
+
+const getCartTotal = () => {
+  let ans = 0;
+  shoppingCart.forEach((item) => {
+    ans += item.count * item.price;
+  });
+  return ans;
+};
+
+document.getElementById("cancelOrderButton").addEventListener("click", () => {
+  shoppingCart = new Map();
+  renderMenu("Burgers", data[0].products);
+  document.getElementById("shoppingCartItemsCount").innerHTML = " Items: 0";
+});
 
 main();
