@@ -1,0 +1,19 @@
+#logo {
+  font-family: "Satisfy", cursive;
+  margin-left: 30px;
+}
+
+#shopping-cart {
+  width: 40px;
+  height: auto;
+}
+
+.main-image > img {
+  max-width: 100%;
+}
+
+.card {
+  min-width: 18rem;
+  max-width: 20rem;
+  margin: 5px;
+}
